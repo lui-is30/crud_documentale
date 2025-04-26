@@ -17,7 +17,7 @@ public class Documento {
     public Documento() {
     }
 
-    public Documento(String titolo, String descrizione) {
+    public Documento(String titolo, String autore,Long dimensione) {
         this.titolo = titolo;
         this.autore = autore;
         this.dimensione = dimensione;
