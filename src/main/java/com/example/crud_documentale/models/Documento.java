@@ -3,14 +3,15 @@ package com.example.crud_documentale.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "documenti")
 public class Documento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String titolo;
-    private String descrizione;
+    private String autore;
+    private Long dimensione;
 
     // Costruttori
     public Documento() {
@@ -18,7 +19,8 @@ public class Documento {
 
     public Documento(String titolo, String descrizione) {
         this.titolo = titolo;
-        this.descrizione = descrizione;
+        this.autore = autore;
+        this.dimensione = dimensione;
     }
 
     // Getter e Setter
@@ -38,12 +40,20 @@ public class Documento {
         this.titolo = titolo;
     }
 
-    public String getDescrizione() {
-        return descrizione;
+    public String getAutore() {
+        return autore;
     }
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
+    public void setAutore(String autore) {
+        this.autore = autore;
+    }
+
+    public Long getDimensione(){
+        return dimensione;
+    }
+
+    public void setDimensione(Long dimensione){
+        this.dimensione = dimensione;
     }
 }
 
