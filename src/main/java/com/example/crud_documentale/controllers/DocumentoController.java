@@ -42,5 +42,11 @@ public class DocumentoController {
         }
     }
 
+    @GetMapping("/{id}/download")
+    public ResponseEntity<?> downloadDocumento(@PathVariable Long id) {
+        return documentService.downloadDocumento(id);
+    }
+
+
 
 }
