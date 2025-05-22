@@ -26,6 +26,11 @@ public class DocumentService {
         this.documentoRepository = documentoRepository;
     }
 
+    public List<Documento> cercaPerTitolo(String titolo) {
+        return documentoRepository.findByTitoloContainingIgnoreCase(titolo);
+    }
+
+
     @Transactional
     public Documento salvaDocumento(Documento documento,byte[] file) throws Exception {
         Documento salva = documentoRepository.save(documento);

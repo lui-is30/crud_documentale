@@ -51,4 +51,11 @@ public class DocumentoController {
     public ResponseEntity<Resource> downloadDocumento(@PathVariable Long id) {
         return documentService.downloadDocumento(id);
     }
+
+    @GetMapping("/ricerca")
+    public ResponseEntity<List<Documento>> cercaPerTitolo(@RequestParam String titolo) {
+        List<Documento> risultati = documentService.cercaPerTitolo(titolo);
+    return ResponseEntity.ok(risultati);
+}
+
 }
