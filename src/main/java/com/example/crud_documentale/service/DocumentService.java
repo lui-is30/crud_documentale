@@ -2,51 +2,51 @@ package com.example.crud_documentale.service;
 
 import com.example.crud_documentale.models.Documento;
 import com.example.crud_documentale.repositories.DocumentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.List;
 
 @Service
 public class DocumentService {
 
+    private static final String DIRECTORY = "C:/fileSystem/";
+
     private final DocumentoRepository documentoRepository;
 
+    @Autowired
     public DocumentService(DocumentoRepository documentoRepository) {
         this.documentoRepository = documentoRepository;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Documento salvaDocumento(Documento documento, byte[] fileBytes) throws IOException {
+        Documento salvato = documentoRepository.save(documento);
+        String titolo = documento.getTitolo();
+        String estensione = titolo.substring(titolo.lastIndexOf("."));
+
+        Path directoryPath = Paths.get(DIRECTORY);
+        if (Files.notExists(directoryPath)) {
+            Files.createDirectories(directoryPath);
+        }
+
+        Path filePath = directoryPath.resolve(salvato.getId() + estensione);
+        Files.write(filePath, fileBytes, StandardOpenOption.CREATE_NEW);
+
+        return salvato;
     }
 
     public List<Documento> cercaPerTitolo(String titolo) {
         return documentoRepository.findByTitoloContainingIgnoreCase(titolo);
     }
-
-
-    @Transactional
-    public Documento salvaDocumento(Documento documento,byte[] file) throws Exception {
-        Documento salva = documentoRepository.save(documento);
-
-        String fileName = documento.getTitolo();
-        String estensione = fileName.substring(fileName.lastIndexOf("."));
-
-        try{
-            Path filePath = Paths.get("C:/fileSystem",salva.getId()+estensione);
-            Files.write(filePath, file);
-        } catch (IOException e) {
-            throw new RuntimeException("Errore durante l'inserimento del documento",e);
-        }
-        return salva;
-    }
-
 
     public ResponseEntity<Resource> downloadDocumento(Long id) {
         Documento documento = documentoRepository.findById(id).orElse(null);
@@ -56,7 +56,7 @@ public class DocumentService {
 
         String titolo = documento.getTitolo();
         String estensione = titolo.substring(titolo.lastIndexOf("."));
-        Path filePath = Paths.get("C:/fileSystem/" + documento.getId() + estensione);
+        Path filePath = Paths.get(DIRECTORY + documento.getId() + estensione);
 
         try {
             byte[] fileData = Files.readAllBytes(filePath);
@@ -68,9 +68,8 @@ public class DocumentService {
                     .contentLength(fileData.length)
                     .body(resource);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.internalServerError().build();
         }
     }
-
-
 }
+
