@@ -2,7 +2,6 @@ package com.example.crud_documentale.service;
 
 import com.example.crud_documentale.models.Documento;
 import com.example.crud_documentale.repositories.DocumentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 @Service
@@ -22,7 +24,6 @@ public class DocumentService {
 
     private final DocumentoRepository documentoRepository;
 
-    @Autowired
     public DocumentService(DocumentoRepository documentoRepository) {
         this.documentoRepository = documentoRepository;
     }

@@ -1,12 +1,8 @@
 package com.example.crud_documentale.controllers;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 import com.example.crud_documentale.service.DocumentService;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.core.io.Resource;
